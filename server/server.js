@@ -32,20 +32,16 @@ app.get("/api/v1/restaurants/:id", async (req, res) => {
     console.log(req.params.id);
 
     try {
-        const restaurant = await db.query("select * from restaurants where id = $1", [
-            req.params.id
-            ]);
+        const restaurant = await db.query(
+            "select * from restaurants where id = $1", 
+            [req.params.id]
+            );
 
-
-            const reviews = await db.query("select * from reviews where restaurant_id = $1", [
+     const reviews = await db.query("select * from reviews where restaurant_id = $1", [
                  req.params.id
                 ]);
 
-
-
-
-
-        res.status(200).json({
+      res.status(200).json({
             status: "success",
             data: {
                 restaurant: restaurant.rows[0],
@@ -125,20 +121,19 @@ app.delete("/api/v1/restaurants/:id", async (req, res) => {
 
 app.post('/api/v1/restaurants/:id/addReview', async (req, res) => {
     try{
-       const newReview= await db.query('INSERT INTO reviews (restaurant_id, name, review, rating) values ($1, $2,
-         $3, $4) returning *;', [req.params.id, req.body.name, req.body.review, req.body.rating])
+       const newReview= await db.query('INSERT INTO reviews (restaurant_id, name, review, rating) values ($1, $2 $3, $4) returning *;', 
+       [req.params.id, req.body.name, req.body.review, req.body.rating]
+       );
          res.status(201).json({
             status: 'success',
             data: {
                 review: newReview.rows[0]
             }
-         })
+         });
     } catch (err) {
-        console.log(err)
-
-    }
+      console.log(err)
+  }
 });
-
 
 
 const port = process.env.PORT || 3001;
